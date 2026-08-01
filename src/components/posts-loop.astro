@@ -6,7 +6,7 @@ const { count } = Astro.props;
 
 function parseDate(dateStr) {
   const [month, day, year] = dateStr.split(" ");
-  return new Date(`${month} ${parseInt(day)}, ${year}`);
+  return new Date(`${month} ${Number.parseInt(day)}, ${year}`);
 }
 
 const sortedPosts = allPosts

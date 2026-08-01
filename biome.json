@@ -8,6 +8,9 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
+  "formatter": {
+    "enabled": false
+  },
   "linter": {
     "enabled": true,
     "rules": {

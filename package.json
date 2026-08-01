@@ -8,8 +8,10 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "biome check --apply-unsafe .",
-    "format": "prettier --write ."
+    "check": "biome check .",
+    "check:fix": "biome check --apply-unsafe .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@astrojs/check": "^0.6.0",

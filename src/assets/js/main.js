@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showDay();
   }
   stickyHeaderFuncionality();
-  applyMenuItemClasses();
   evaluateHeaderPosition();
   mobileMenuFunctionality();
 });
@@ -132,16 +131,6 @@ function showNight(animate) {
     }
   }, timeout);
 }
-
-window.applyMenuItemClasses = () => {
-  const menuItems = document.querySelectorAll("#menu a");
-  for (let i = 0; i < menuItems.length; i++) {
-    if (menuItems[i].pathname === window.location.pathname) {
-      menuItems[i].classList.add("text-neutral-900", "dark:text-white");
-    }
-  }
-  //:class="{ 'text-neutral-900 dark:text-white': window.location.pathname == '{menu.url}', 'text-neutral-700 dark:text-neutral-400': window.location.pathname != '{menu.url}' }"
-};
 
 function mobileMenuFunctionality() {
   document.getElementById("openMenu").addEventListener("click", () => {

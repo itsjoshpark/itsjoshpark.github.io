@@ -3,7 +3,7 @@
     "name": "Aperture",
     "description": "Point it at a folder on your machine to browse the images, delete the ones you don't want, then drag the keepers into order and rename them sequentially",
     "uses": "Vue",
-    "image": "/assets/images/tools/aperture.png",
+    "image": "/assets/images/utilities/aperture.png",
     "url": "https://joshuapark.dev/aperture"
   }
 ]

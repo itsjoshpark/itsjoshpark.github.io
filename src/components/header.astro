@@ -1,6 +1,11 @@
 ---
 import menus from "../collections/menu.json";
 import Logo from "../components/logo.astro";
+
+// Strip trailing slashes so "/projects" and "/projects/" compare equal.
+// GitHub Pages serves directory-format builds with a trailing slash.
+const normalize = (path: string) => path.replace(/\/+$/, "") || "/";
+const currentPath = normalize(Astro.url.pathname);
 ---
 
 <!-- This is an invisible div with relative position so that it takes up the height of the menu (because menu is absolute/fixed) -->
@@ -66,10 +71,16 @@ import Logo from "../components/logo.astro";
         </div>
         {
           menus.map((menu) => {
+            const isActive =
+              menu.url.startsWith("/") && normalize(menu.url) === currentPath;
             return (
               <a
                 href={menu.url}
-                class="relative flex w-full items-center justify-center px-3 py-2 text-center font-medium tracking-wide duration-200 ease-out hover:text-neutral-900 dark:hover:text-white sm:mb-0 sm:py-0 md:w-auto"
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "relative flex w-full items-center justify-center px-3 py-2 text-center font-medium tracking-wide duration-200 ease-out hover:text-neutral-900 dark:hover:text-white sm:mb-0 sm:py-0 md:w-auto",
+                  isActive && "text-neutral-900 dark:text-white",
+                ]}
               >
                 {menu.name}
               </a>

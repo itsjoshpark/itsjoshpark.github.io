@@ -2,7 +2,7 @@
 import menus from "../collections/menu.json";
 import Logo from "../components/logo.astro";
 
-// Strip trailing slashes so "/projects" and "/projects/" compare equal.
+// Strip trailing slashes so "/work" and "/work/" compare equal.
 // GitHub Pages serves directory-format builds with a trailing slash.
 const normalize = (path: string) => path.replace(/\/+$/, "") || "/";
 const currentPath = normalize(Astro.url.pathname);

@@ -1,7 +1,8 @@
 ---
 import Button from "../components/button.astro";
-import Projects from "../components/home/projects.astro";
 import Separator from "../components/home/separator.astro";
+import Utilities from "../components/home/utilities.astro";
+import Work from "../components/home/work.astro";
 import Layout from "../layouts/main.astro";
 ---
 
@@ -69,6 +70,9 @@ import Layout from "../layouts/main.astro";
     </div>
   </div>
 
-  <Separator text="Check out my projects" />
-  <Projects />
+  <Separator text="Check out my work" />
+  <Work />
+
+  <Separator text="And some things you can use" />
+  <Utilities />
 </Layout>

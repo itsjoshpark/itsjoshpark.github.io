@@ -1,31 +1,30 @@
 ---
-import projects from "../../collections/projects.json";
+import work from "../../collections/work.json";
 import Button from "../button.astro";
-import Project from "../project.astro";
+import Card from "../card.astro";
 ---
 
 <section class="mx-auto max-w-4xl px-7 lg:px-0">
   <h2
     class="text-2xl font-bold leading-10 tracking-tight text-neutral-900 dark:text-neutral-100"
   >
-    My Projects
+    My Work
   </h2>
   <p class="mb-6 text-base text-neutral-600 dark:text-neutral-400">
-    Here are some of my recent projects. I'm always working on something new, so
-    check back often!
+    Here's some of the software I've built for clients and employers.
   </p>
   <div
     class="mt-7 grid w-full grid-cols-1 items-stretch gap-7 sm:grid-cols-2 md:grid-cols-3"
   >
     {
-      projects.map((project) => {
+      work.slice(0, 3).map((item) => {
         return (
-          <Project
-            name={project.name}
-            description={project.description}
-            uses={project.uses}
-            image={project.image}
-            url={project.url}
+          <Card
+            name={item.name}
+            description={item.description}
+            uses={item.uses}
+            image={item.image}
+            url={item.url}
           />
         );
       })
@@ -34,8 +33,8 @@ import Project from "../project.astro";
 
   <div class="flex w-full items-center justify-center py-5">
     <Button
-      text="View All My Projects"
-      link="/projects"
+      text="View All My Work"
+      link="/work"
     />
   </div>
 </section>

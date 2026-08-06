@@ -1,0 +1,40 @@
+---
+import utilities from "../../collections/utilities.json";
+import Button from "../button.astro";
+import Card from "../card.astro";
+---
+
+<section class="mx-auto max-w-4xl px-7 lg:px-0">
+  <h2
+    class="text-2xl font-bold leading-10 tracking-tight text-neutral-900 dark:text-neutral-100"
+  >
+    My Utilities
+  </h2>
+  <p class="mb-6 text-base text-neutral-600 dark:text-neutral-400">
+    Apps I've built in my free time, free for you to use.
+  </p>
+  <div
+    class="mt-7 grid w-full grid-cols-1 items-stretch gap-7 sm:grid-cols-2 md:grid-cols-3"
+  >
+    {
+      utilities.slice(0, 3).map((utility) => {
+        return (
+          <Card
+            name={utility.name}
+            description={utility.description}
+            uses={utility.uses}
+            image={utility.image}
+            url={utility.url}
+          />
+        );
+      })
+    }
+  </div>
+
+  <div class="flex w-full items-center justify-center py-5">
+    <Button
+      text="View All My Utilities"
+      link="/utilities"
+    />
+  </div>
+</section>

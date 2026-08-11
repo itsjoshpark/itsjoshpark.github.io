@@ -6,14 +6,14 @@ import Layout from "../layouts/main.astro";
 ---
 
 <Layout title="My Work">
-  <section class="relative z-20 mx-auto my-12 max-w-2xl px-7 lg:px-0">
+  <section class="relative z-20 mx-auto my-12 max-w-4xl px-7 lg:px-0">
     <PageHeading
       title="My Work"
       description="Software I've built for clients and employers. The apps I've built for myself live under Utilities."
     />
 
     <div
-      class="z-50 my-8 grid w-full grid-cols-1 items-stretch gap-7 sm:grid-cols-2 sm:gap-5"
+      class="z-50 my-8 grid w-full grid-cols-1 items-stretch gap-7 sm:grid-cols-2 md:grid-cols-3"
     >
       {
         work.map((item) => {

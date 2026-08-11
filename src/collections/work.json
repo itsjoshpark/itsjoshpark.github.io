@@ -1,37 +1,44 @@
 [
   {
+    "name": "Sports schedule & messaging app",
+    "description": "Built a mobile application for QuickScores that streamlined game schedule tracking and real-time team messaging across iOS and Android",
+    "uses": "React Native",
+    "image": "/assets/images/work/quickscores.jpg",
+    "url": "https://www.quickscores.com/"
+  },
+  {
     "name": "Asset management software",
-    "description": "Developed an in-house AI-powered asset management system, organizing 100+TB of media",
+    "description": "Engineered an AI-powered asset management system to index and organize 100+ TB of media",
     "uses": "Angular",
     "image": "/assets/images/work/nda.png"
   },
   {
     "name": "Translation approval system",
-    "description": "Led a team to develop a centralized translation approval system used by 95+ branch offices worldwide",
+    "description": "Led development of a centralized translation approval system used by 95+ branch offices worldwide",
     "uses": "Angular",
     "image": "/assets/images/work/nda.png"
   },
   {
     "name": "Analytics platform",
-    "description": "Led a team to build a data analytics platform tracking 1,000+ language translations, enabling data-driven decision-making",
+    "description": "Led development of a data analytics platform which tracks 1,000+ language translations, enabling streamlined translation approvals",
     "uses": "Angular",
     "image": "/assets/images/work/nda.png"
   },
   {
     "name": "NJ Sharing Network",
-    "description": "Developed a lab portal for organizing the distribution of donated organs between several hospitals in New Jersey",
+    "description": "Built a high-stakes lab portal coordinating critical donated organ distribution across New Jersey hospital networks",
     "uses": "React",
     "image": "/assets/images/work/nda.png"
   },
   {
     "name": "Briones Law Firm",
-    "description": "Developed a mobile friendly website for a new law attorney firm that handles complex litigations against corporations",
+    "description": "Built a responsive website for a law firm specializing in complex corporate litigation",
     "uses": "SvelteKit",
     "image": "/assets/images/work/briones.jpg"
   },
   {
     "name": "Vision2Home",
-    "description": "Designed & developed a mobile friendly website showcasing ADUs (accessory dwelling units)",
+    "description": "Designed and developed a responsive showcase site for accessory dwelling units (ADUs)",
     "uses": "SvelteKit",
     "image": "/assets/images/work/vision2home.jpeg",
     "url": "https://www.vision2home.com/"

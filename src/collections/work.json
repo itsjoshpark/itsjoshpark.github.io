@@ -1,7 +1,7 @@
 [
   {
-    "name": "Sports schedule & messaging app",
-    "description": "Built a mobile application for QuickScores that streamlined game schedule tracking and real-time team messaging across iOS and Android",
+    "name": "QuickScores",
+    "description": "Built a cross-platform mobile app that streamlined game schedule tracking and real-time team messaging",
     "uses": "React Native",
     "image": "/assets/images/work/quickscores.jpg",
     "url": "https://www.quickscores.com/"

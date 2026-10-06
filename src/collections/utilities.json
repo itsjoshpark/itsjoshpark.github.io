@@ -1,10 +1,10 @@
 [
   {
-    "name": "Aperture",
-    "description": "Browse, reorder, and delete images on your computer right from your browser",
-    "uses": "Vue",
-    "image": "/assets/images/utilities/aperture.png",
-    "url": "https://joshuapark.dev/aperture"
+    "name": "Audio Balance",
+    "description": "Native SwiftUI Mac app that keeps your left-right audio balance from drifting",
+    "uses": "SwiftUI",
+    "image": "/assets/images/utilities/audio-balance.png",
+    "url": "https://github.com/itsjoshpark/AudioBalance"
   },
   {
     "name": "Mochi Diffusion",
@@ -26,6 +26,13 @@
     "uses": "AppleScript",
     "image": "/assets/images/utilities/charge-limiter.png",
     "url": "https://github.com/itsjoshpark/charge-limiter"
+  },
+  {
+    "name": "Aperture",
+    "description": "Browse, reorder, and delete images on your computer right from your browser",
+    "uses": "Vue",
+    "image": "/assets/images/utilities/aperture.png",
+    "url": "https://joshuapark.dev/aperture"
   },
   {
     "name": "Coffee Ratio",

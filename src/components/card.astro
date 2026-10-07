@@ -1,5 +1,5 @@
 ---
-const { name, description, uses, url, image } = Astro.props;
+const { name, description, uses, url, image, imageDark, icon } = Astro.props;
 ---
 
 <a
@@ -17,10 +17,34 @@ const { name, description, uses, url, image } = Astro.props;
     class="relative z-30 block duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1"
   >
     <span class="relative block w-full">
-      <img
-        src={image}
-        class="aspect-[4/3] h-auto w-full rounded-lg object-cover"
-      />
+      {
+        icon ? (
+          <span class="flex aspect-[4/3] w-full items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-900">
+            <img
+              src={image}
+              alt={name}
+              loading="lazy"
+              class:list={[
+                "h-3/5 w-auto object-contain",
+                imageDark && "dark:hidden",
+              ]}
+            />
+            {imageDark && (
+              <img
+                src={imageDark}
+                alt={name}
+                loading="lazy"
+                class="hidden h-3/5 w-auto object-contain dark:block"
+              />
+            )}
+          </span>
+        ) : (
+          <img
+            src={image}
+            class="aspect-[4/3] h-auto w-full rounded-lg object-cover"
+          />
+        )
+      }
       {
         uses && (
           <span class="absolute bottom-1 left-1 rounded-full border border-neutral-700 bg-white px-2 py-0.5 text-xs text-neutral-900 dark:border-neutral-300 dark:bg-black dark:text-white">

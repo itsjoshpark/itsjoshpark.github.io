@@ -90,11 +90,33 @@ const currentPath = normalize(Astro.url.pathname);
       </div>
       <div
         id="darkToggle"
+        role="button"
+        tabindex="0"
+        aria-label="Theme: Auto mode"
+        title="Theme: Auto mode"
         class="group relative ml-4 flex cursor-pointer items-center pl-6 font-medium tracking-wide text-neutral-800 dark:text-white"
       >
         <div
           class="horizon absolute left-0 flex h-6 w-6 items-center justify-center overflow-hidden border-b border-transparent group-hover:border-neutral-600"
         >
+          <svg
+            class="ease absolute h-6 w-6 transform transition duration-700"
+            id="auto"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            ><circle
+              cx="12"
+              cy="12"
+              r="8"
+            ></circle><path
+              d="M12 4a8 8 0 010 16z"
+              fill="currentColor"
+            ></path></svg
+          >
           <svg
             class="ease absolute h-6 w-6 transform transition duration-700"
             id="sun"
@@ -109,7 +131,7 @@ const currentPath = normalize(Astro.url.pathname);
             ></path></svg
           >
           <svg
-            class="ease absolute hidden h-6 w-6 transform transition duration-700"
+            class="ease absolute h-6 w-6 transform transition duration-700"
             id="moon"
             fill="none"
             stroke-linecap="round"
@@ -124,13 +146,18 @@ const currentPath = normalize(Astro.url.pathname);
         </div>
         <span class="hidden sm:inline-block">
           <span
+            id="autoText"
+            class="ml-2"
+            >Auto mode</span
+          >
+          <span
             id="dayText"
             class="ml-2"
             >Day mode</span
           >
           <span
             id="nightText"
-            class="ml-2 hidden"
+            class="ml-2"
             >Night mode</span
           >
         </span>

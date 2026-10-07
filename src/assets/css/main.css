@@ -8,7 +8,8 @@
   border-radius: 30px;
 }
 
-#sun {
+#sun,
+#auto {
   transform: translate3d(0, 0px, 0);
 }
 
@@ -16,7 +17,8 @@
   transform: translate3d(0, 0px, 0);
 }
 
-#darkToggle:hover #sun {
+#darkToggle:hover #sun,
+#darkToggle:hover #auto {
   transform: translate3d(0, 10px, 0);
 }
 
@@ -26,6 +28,28 @@
 
 html.dark #darkToggle:hover .horizon {
   border-color: #718096 !important;
+}
+
+/* Theme toggle: show the icon and label for html[data-theme] */
+#auto,
+#sun,
+#moon,
+#autoText,
+#dayText,
+#nightText {
+  display: none;
+}
+
+html:not([data-theme="light"]):not([data-theme="dark"]) #auto,
+html[data-theme="light"] #sun,
+html[data-theme="dark"] #moon {
+  display: block;
+}
+
+html:not([data-theme="light"]):not([data-theme="dark"]) #autoText,
+html[data-theme="light"] #dayText,
+html[data-theme="dark"] #nightText {
+  display: inline;
 }
 
 html.dark {

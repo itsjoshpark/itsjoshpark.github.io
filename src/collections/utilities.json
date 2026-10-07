@@ -3,21 +3,25 @@
     "name": "Audio Balance",
     "description": "Native SwiftUI Mac app that keeps your left-right audio balance from drifting",
     "uses": "SwiftUI",
-    "image": "/assets/images/utilities/audio-balance.png",
+    "image": "/assets/images/utilities/audio-balance-icon.png",
+    "imageDark": "/assets/images/utilities/audio-balance-icon-dark.png",
+    "icon": true,
     "url": "https://github.com/itsjoshpark/AudioBalance"
   },
   {
     "name": "Mochi Diffusion",
     "description": "Designed & developed a native Mac app that runs Stable Diffusion",
     "uses": "SwiftUI",
-    "image": "/assets/images/utilities/mochi-diffusion.png",
+    "image": "/assets/images/utilities/mochi-diffusion-icon.png",
+    "icon": true,
     "url": "https://github.com/MochiDiffusion/MochiDiffusion"
   },
   {
     "name": "Front Row",
     "description": "Designed & developed a native Mac app that can play HDR videos & spatial audio",
     "uses": "SwiftUI",
-    "image": "/assets/images/utilities/front-row.png",
+    "image": "/assets/images/utilities/front-row-icon.png",
+    "icon": true,
     "url": "https://github.com/itsjoshpark/FrontRow"
   },
   {

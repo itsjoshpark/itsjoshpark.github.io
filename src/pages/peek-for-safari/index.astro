@@ -1,0 +1,82 @@
+---
+import PageHeading from "../../components/page-heading.astro";
+import Layout from "../../layouts/main.astro";
+
+const features = [
+  "Shift+Click (or Shift+middle-click) any link to open it in an overlay.",
+  "Refresh, copy the link, and switch between Auto, Light, and Dark themes from the header.",
+  "Open the page in a new tab, or close the preview with Esc or a click outside.",
+  "Turn Shift+Click off for a site from the toolbar button, for web apps that use Shift+Click themselves.",
+  "The preview nearly fills the window, stays centered, and follows the window as you resize it.",
+  "Sites that forbid embedding open in a peek-sized popup window instead. Close it with ⌘W.",
+];
+---
+
+<Layout title="Peek for Safari">
+  <section class="relative z-20 mx-auto my-12 max-w-4xl px-7 lg:px-0">
+    <img
+      src="/assets/images/utilities/peek-for-safari-icon.png"
+      alt="Peek for Safari icon"
+      class="mb-6 h-28 w-28 dark:hidden"
+    />
+    <img
+      src="/assets/images/utilities/peek-for-safari-icon-dark.png"
+      alt="Peek for Safari icon"
+      class="mb-6 hidden h-28 w-28 dark:block"
+    />
+
+    <PageHeading
+      title="Peek for Safari"
+      description="Preview links in an overlay with Shift+Click in Safari, without leaving the page."
+    />
+
+    <!-- TODO: replace with <Button text="Download on the Mac App Store" link="https://apps.apple.com/app/id…" /> once the app is live -->
+    <p
+      class="mt-5 text-sm font-semibold text-neutral-900 dark:text-neutral-100"
+    >
+      Coming soon to the Mac App Store
+    </p>
+
+    <img
+      src="/assets/images/peek-for-safari/screenshot.jpg"
+      alt="A link previewed in the Peek for Safari overlay in Safari"
+      class="relative z-30 my-10 w-full rounded-xl"
+    />
+
+    <h2
+      class="mb-2 mt-5 text-2xl font-bold dark:text-neutral-200 sm:mt-6 lg:mt-10"
+    >
+      Features
+    </h2>
+    <ul
+      class="list-disc space-y-2 pl-5 text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      {features.map((feature) => <li>{feature}</li>)}
+    </ul>
+
+    <h2
+      class="mb-2 mt-5 text-2xl font-bold dark:text-neutral-200 sm:mt-6 lg:mt-10"
+    >
+      Requirements
+    </h2>
+    <p
+      class="text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      Safari 27 or later, on macOS 15 Sequoia or later.
+    </p>
+
+    <p
+      class="mt-10 text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      <a
+        href="/peek-for-safari/support/"
+        class="text-indigo-600 underline"
+        >Support</a
+      > · <a
+        href="/peek-for-safari/privacy/"
+        class="text-indigo-600 underline"
+        >Privacy Policy</a
+      >
+    </p>
+  </section>
+</Layout>

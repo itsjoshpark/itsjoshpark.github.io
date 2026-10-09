@@ -3,8 +3,7 @@ layout: ../../layouts/post.astro
 title: Peek for Safari Support
 ---
 
-Have a question, found a bug, or have an idea? Email [jpark@duck.com](mailto:jpark@duck.com) and
-I'll get back to you.
+Found a bug or have a question? Contact me at [jpark@duck.com](mailto:jpark@duck.com).
 
 ## Frequently asked questions
 

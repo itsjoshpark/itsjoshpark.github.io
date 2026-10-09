@@ -1,5 +1,14 @@
 [
   {
+    "name": "Peek for Safari",
+    "description": "Safari extension that previews links in an overlay with Shift+Click",
+    "uses": "Safari Extension",
+    "image": "/assets/images/utilities/peek-for-safari-icon.png",
+    "imageDark": "/assets/images/utilities/peek-for-safari-icon-dark.png",
+    "icon": true,
+    "url": "/peek-for-safari/"
+  },
+  {
     "name": "Audio Balance",
     "description": "Native SwiftUI Mac app that keeps your left-right audio balance from drifting",
     "uses": "SwiftUI",

@@ -1,7 +1,7 @@
 [
   {
     "name": "Peek for Safari",
-    "description": "Safari extension that previews links in an overlay with Shift+Click",
+    "description": "Inspired by Arc's Peek — Preview a link without opening a new tab.",
     "uses": "Safari Extension",
     "image": "/assets/images/utilities/peek-for-safari-icon.png",
     "imageDark": "/assets/images/utilities/peek-for-safari-icon-dark.png",

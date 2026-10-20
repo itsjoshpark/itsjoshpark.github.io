@@ -1,10 +1,11 @@
 ---
 const { name, description, uses, url, image, imageDark, icon } = Astro.props;
+const isInternal = url?.startsWith("/");
 ---
 
 <a
   href={url}
-  target="_blank"
+  target={isInternal ? undefined : "_blank"}
   class="h-100 group relative flex flex-col items-stretch rounded-2xl p-7 duration-300 ease-out sm:p-3"
 >
   <span

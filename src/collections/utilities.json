@@ -10,12 +10,12 @@
   },
   {
     "name": "Audio Balance",
-    "description": "Native SwiftUI Mac app that keeps your left-right audio balance from drifting",
+    "description": "Keeps your Mac's left–right audio balance locked where you set it. AirPods and some other devices sometimes drift off-center.",
     "uses": "SwiftUI",
     "image": "/assets/images/utilities/audio-balance-icon.png",
     "imageDark": "/assets/images/utilities/audio-balance-icon-dark.png",
     "icon": true,
-    "url": "https://github.com/itsjoshpark/AudioBalance"
+    "url": "/audio-balance/"
   },
   {
     "name": "Mochi Diffusion",

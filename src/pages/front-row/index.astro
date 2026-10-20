@@ -1,0 +1,92 @@
+---
+import Button from "../../components/button.astro";
+import PageHeading from "../../components/page-heading.astro";
+import Layout from "../../layouts/main.astro";
+
+const features = [
+  "Plays HDR video with accurate color, and multichannel audio as spatial audio on AirPods and other supported headphones.",
+  "Small on-screen controls that stay clear of the video and subtitles, plus keyboard shortcuts: Space or K to play, ← and → to skip, ⌘G to go to a time, ⌘[ and ⌘] to change speed, and M to mute.",
+  "Switch audio tracks and subtitles, change playback speed, and pick up where you left off.",
+  "The Inspector (⌘I) shows a file's format, tracks, and codecs.",
+  "Opens MKV files by converting them to MP4 with ffmpeg. Streams are copied without re-encoding whenever possible.",
+  "Open a video from a URL, control playback with media keys and Now Playing, and get updates automatically.",
+  "Open source.",
+];
+---
+
+<Layout title="Front Row">
+  <section class="relative z-20 mx-auto my-12 max-w-4xl px-7 lg:px-0">
+    <img
+      src="/assets/images/utilities/front-row-icon.png"
+      alt="Front Row icon"
+      class="mb-6 h-28 w-28"
+    />
+
+    <PageHeading
+      title="Front Row"
+      description="Play HDR videos and spatial audio natively on your Mac."
+    />
+
+    <div class="flex flex-wrap items-center gap-x-5">
+      <Button
+        link="https://github.com/itsjoshpark/FrontRow/releases/latest"
+        text="Download for Mac"
+      />
+      <a
+        href="https://github.com/itsjoshpark/FrontRow"
+        class="mt-5 text-sm text-indigo-600 underline"
+        >Source on GitHub</a
+      >
+    </div>
+
+    <img
+      src="/assets/images/front-row/screenshot.jpg"
+      alt="A video playing in Front Row with its playback controls showing"
+      class="relative z-30 my-10 w-full rounded-xl"
+    />
+
+    <h2
+      class="mb-2 mt-5 text-2xl font-bold dark:text-neutral-200 sm:mt-6 lg:mt-10"
+    >
+      Features
+    </h2>
+    <ul
+      class="list-disc space-y-2 pl-5 text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      {features.map((feature) => <li>{feature}</li>)}
+    </ul>
+
+    <h2
+      class="mb-2 mt-5 text-2xl font-bold dark:text-neutral-200 sm:mt-6 lg:mt-10"
+    >
+      Requirements
+    </h2>
+    <p
+      class="text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      macOS 15.6 Sequoia or later on Apple Silicon (M1 and later). HDR needs an <a
+        href="https://support.apple.com/en-us/102205"
+        class="text-indigo-600 underline"
+        >HDR-capable Mac</a
+      >, and spatial audio needs <a
+        href="https://support.apple.com/en-us/102469"
+        class="text-indigo-600 underline"
+        >supported headphones</a
+      >.
+    </p>
+
+    <p
+      class="mt-10 text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      <a
+        href="/front-row/support/"
+        class="text-indigo-600 underline"
+        >Support</a
+      > · <a
+        href="/front-row/privacy/"
+        class="text-indigo-600 underline"
+        >Privacy Policy</a
+      >
+    </p>
+  </section>
+</Layout>

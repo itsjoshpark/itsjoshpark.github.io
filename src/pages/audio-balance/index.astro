@@ -1,0 +1,93 @@
+---
+import PageHeading from "../../components/page-heading.astro";
+import Layout from "../../layouts/main.astro";
+
+const features = [
+  "Locks your output device's left–right balance at the point you choose, and restores it when it drifts 2% or more.",
+  "Runs as a background agent you never see, with no menu bar icon. It keeps working after you close the window or restart.",
+  "Follows your default output device as you switch between AirPods, speakers, and other devices.",
+  "Optional notifications tell you when the balance was restored.",
+  "The settings window shows the current device, its balance, and the last correction.",
+  "Open source, with no data collected and no network connections.",
+];
+---
+
+<Layout title="Audio Balance">
+  <section class="relative z-20 mx-auto my-12 max-w-4xl px-7 lg:px-0">
+    <img
+      src="/assets/images/utilities/audio-balance-icon.png"
+      alt="Audio Balance icon"
+      class="mb-6 h-28 w-28 dark:hidden"
+    />
+    <img
+      src="/assets/images/utilities/audio-balance-icon-dark.png"
+      alt="Audio Balance icon"
+      class="mb-6 hidden h-28 w-28 dark:block"
+    />
+
+    <PageHeading
+      title="Audio Balance"
+      description="Keeps your Mac's left–right audio balance locked where you set it. AirPods and some other devices sometimes drift off-center."
+    />
+
+    <a
+      href="https://apps.apple.com/app/id6817587097"
+      class="mt-5 inline-block"
+    >
+      <img
+        src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1760313600"
+        alt="Download on the App Store"
+        width="220"
+        class="dark:hidden"
+      />
+      <img
+        src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/white/en-us?releaseDate=1760313600"
+        alt="Download on the App Store"
+        width="220"
+        class="hidden dark:block"
+      />
+    </a>
+
+    <img
+      src="/assets/images/audio-balance/screenshot.jpg"
+      alt="The Audio Balance settings window with the balance locked at center"
+      class="relative z-30 my-10 w-full rounded-xl"
+    />
+
+    <h2
+      class="mb-2 mt-5 text-2xl font-bold dark:text-neutral-200 sm:mt-6 lg:mt-10"
+    >
+      Features
+    </h2>
+    <ul
+      class="list-disc space-y-2 pl-5 text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      {features.map((feature) => <li>{feature}</li>)}
+    </ul>
+
+    <h2
+      class="mb-2 mt-5 text-2xl font-bold dark:text-neutral-200 sm:mt-6 lg:mt-10"
+    >
+      Requirements
+    </h2>
+    <p
+      class="text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      macOS 15 Sequoia or later.
+    </p>
+
+    <p
+      class="mt-10 text-sm leading-6 text-neutral-600 dark:text-neutral-400 sm:text-base sm:leading-7"
+    >
+      <a
+        href="/audio-balance/support/"
+        class="text-indigo-600 underline"
+        >Support</a
+      > · <a
+        href="/audio-balance/privacy/"
+        class="text-indigo-600 underline"
+        >Privacy Policy</a
+      >
+    </p>
+  </section>
+</Layout>

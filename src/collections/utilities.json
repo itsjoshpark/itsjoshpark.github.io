@@ -27,11 +27,11 @@
   },
   {
     "name": "Front Row",
-    "description": "Designed & developed a native Mac app that can play HDR videos & spatial audio",
+    "description": "Play HDR videos and spatial audio natively on your Mac.",
     "uses": "SwiftUI",
     "image": "/assets/images/utilities/front-row-icon.png",
     "icon": true,
-    "url": "https://github.com/itsjoshpark/FrontRow"
+    "url": "/front-row/"
   },
   {
     "name": "Charge Limiter",

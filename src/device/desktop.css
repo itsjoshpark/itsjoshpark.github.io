@@ -1,0 +1,442 @@
+/* Layout: one wall of a 1970s mainframe room, seen straight on. Left cabinet: a tall picture tube with the section keys,
+   a POWER lamp and the rocker on a sloped shelf below it. Right cabinet: a line printer at the top; the paper comes
+   down the bay, over the tape reels behind their glass window, to the floor.
+   The CUT key on the printer tears the page off. The wall is a Blender (Cycles) render, scaled so that the
+   middle 240 cm always fit the window; the strips at its edges are stretched to fill any extra room. Single theme on purpose. */
+:root {
+  --wall: #191817;
+  --screen-bg: #130902;
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--wall);
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%;
+}
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+:focus-visible {
+  outline: 2px solid #fff3dc;
+  outline-offset: 2px;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--wall);
+}
+/* film grain over the whole room, one device pixel */
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  background-image: var(--grain);
+  background-size: var(--grain-size, 128px);
+  opacity: 0.06;
+  mix-blend-mode: soft-light;
+}
+.wall {
+  position: absolute;
+}
+.wall > .bg,
+.ext {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.wall > .bg {
+  inset: 0;
+  background-image: var(--bg);
+}
+
+.screen {
+  position: absolute;
+  overflow: hidden;
+  background: var(--screen-bg);
+  touch-action: none;
+  z-index: 2;
+  cursor: default;
+}
+.screen canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+}
+.screen canvas.glow {
+  filter: blur(3px) brightness(1.4);
+  opacity: 0.32;
+}
+.dome {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+/* the tube lights the mask and the plastic around it a little */
+.halo {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(closest-side, rgba(255, 140, 40, 0.16), rgba(255, 120, 30, 0.05) 70%, transparent);
+  mix-blend-mode: screen;
+  transition: opacity 0.5s;
+}
+.stage[data-power="off"] .halo {
+  opacity: 0;
+}
+
+.keys {
+  position: absolute;
+  z-index: 2;
+}
+.col {
+  --t: 0;
+  --l: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-repeat: no-repeat;
+  background-image: var(--keys);
+  background-position: var(--x) calc((var(--t) + var(--l) * 5) * 100% / 9);
+}
+.col[data-st="down"] {
+  --t: 4;
+}
+.col[data-on] {
+  --l: 1;
+} /* the lamp of the section on the screen */
+.stage[data-power="off"] .col {
+  --l: 0;
+}
+.col button {
+  position: absolute;
+  inset: 12% 6% 10%;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  color: transparent;
+  font-size: 1px;
+}
+.pwr {
+  position: absolute;
+  z-index: 2;
+  background: var(--pw-on) 0 0 / 100% 100% no-repeat;
+}
+.stage[data-power="off"] .pwr {
+  background-image: var(--pw-off);
+}
+.snd {
+  position: absolute;
+  z-index: 3;
+  display: block;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  touch-action: none;
+  border-radius: 4px;
+}
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* screen power: the picture lives in .tube so it can collapse like a CRT; .spot is the dot that lingers after power-off */
+.tube {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+.scan {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.24) 0,
+    rgba(0, 0, 0, 0.06) 0.25px,
+    rgba(0, 0, 0, 0) 0.4px,
+    rgba(0, 0, 0, 0) 0.6px,
+    rgba(0, 0, 0, 0.06) 0.75px,
+    rgba(0, 0, 0, 0.24) 1px
+  );
+}
+.scan::before,
+.scan::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -20%;
+  height: 20%;
+  animation: roll 7.7s linear infinite;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 195, 130, 0),
+    rgba(255, 195, 130, 0.075) 9%,
+    rgba(255, 195, 130, 0.075) 91%,
+    rgba(255, 195, 130, 0)
+  );
+}
+.scan::before {
+  animation-delay: -3.85s;
+}
+@keyframes roll {
+  to {
+    transform: translateY(600%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scan::before,
+  .scan::after {
+    animation: none;
+    display: none;
+  }
+}
+.spot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  margin: -13px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, #fff7e6 0%, #ffc070 30%, rgba(255, 140, 40, 0.35) 55%, transparent 72%);
+}
+.screen.off {
+  cursor: default;
+}
+
+/* printer bay: tape reels at the back, tractor pins on the belts, then the paper */
+.deck {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+} /* reels and tape, drawn in the render's pixels */
+.glassw {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: var(--gr, 12px); /* smoked glass over the reels, with two soft reflections */
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255, 246, 230, 0) 16%,
+      rgba(255, 246, 230, 0.11) 23%,
+      rgba(255, 246, 230, 0.035) 30%,
+      rgba(255, 246, 230, 0) 38%,
+      rgba(255, 246, 230, 0) 60%,
+      rgba(255, 246, 230, 0.06) 65%,
+      rgba(255, 246, 230, 0) 71%
+    ),
+    rgba(16, 12, 9, 0.3);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 240, 220, 0.1),
+    inset 0 12px 20px rgba(0, 0, 0, 0.4);
+}
+.lamp {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.06s;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle, #ffe2b0 0, #ff9a2e 18%, rgba(255, 120, 30, 0.4) 38%, transparent 70%);
+}
+.lamp.on {
+  opacity: 1;
+}
+.plmp {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  background: 0 0 / 100% 100% no-repeat;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.stage[data-power="off"] .plmp {
+  opacity: 1;
+}
+#rdyOff {
+  background-image: var(--rdy-off);
+}
+#tlOff {
+  background-image: var(--tl-off);
+}
+.stage[data-power="off"] .lamp {
+  opacity: 0;
+}
+.cutk {
+  --t: 0;
+  position: absolute;
+  z-index: 3;
+  background: var(--cut) 0 calc(var(--t) * 25%) / 100% 500% no-repeat;
+}
+.cutk[data-st="down"] {
+  --t: 4;
+}
+.cutk button {
+  position: absolute;
+  inset: 14% 10%;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  color: transparent;
+  font-size: 1px;
+}
+/* the paper window: from the top of the window down to the print slit; the script sets its box, and --sl / --sw to the slit */
+.pwin {
+  position: absolute;
+  overflow: hidden;
+  z-index: 5;
+  pointer-events: none;
+  touch-action: none;
+}
+.pwin .sheet {
+  pointer-events: auto;
+  cursor: grab;
+}
+.pwin::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 8px;
+  left: var(--sl, 0);
+  width: var(--sw, 0);
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent);
+} /* the paper comes out of the dark slit */
+.sheet,
+.lead {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+.pwin .sheet,
+.lead {
+  box-shadow:
+    4px 0 6px -4px rgba(0, 0, 0, 0.5),
+    -4px 0 6px -4px rgba(0, 0, 0, 0.5),
+    14px 10px 22px -8px rgba(0, 0, 0, 0.55);
+} /* and a soft shadow on the back of the bay */
+.sheet > canvas {
+  display: block;
+}
+.ghost {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.6s;
+  pointer-events: none;
+  z-index: 3;
+  padding: 12px 34px;
+  box-sizing: content-box;
+  background: radial-gradient(farthest-side, #ece5d5 78%, rgba(236, 229, 213, 0));
+} /* on a soft patch of paper color, so it reads over print */
+.ghost.show {
+  opacity: 0.92;
+  transition-delay: 0.2s;
+}
+.sheet > canvas.hint {
+  position: absolute;
+  opacity: 0.62;
+}
+.sheet > canvas.hint.top {
+  top: 7px;
+}
+.sheet > canvas.hint.end {
+  bottom: 9px;
+}
+/* first visit only: a pointing hand shows that the paper can be swiped sideways */
+.hand {
+  position: absolute;
+  width: 35px;
+  height: 42.5px;
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNCAxNyIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE3IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPjxyZWN0IHg9IjUiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI2IiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSIxIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjQiIHk9IjIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNiIgeT0iMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI0IiB5PSIzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSIzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjUiIHk9IjQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSI0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjgiIHk9IjQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI5IiB5PSI0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjgiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI5IiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIxMSIgeT0iNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjEyIiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMSIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjIiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSI2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iOCIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjExIiB5PSI2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTIiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMyIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjAiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIxIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMiIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjMiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI0IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iOCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjExIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTIiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMyIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjAiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIxIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMiIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjMiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI0IiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjExIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTIiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMyIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIyIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMyIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjQiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI1IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNiIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOSIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEwIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMiIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEzIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMiIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIzIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjQiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNSIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOCIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI5IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjExIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEyIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEzIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjIiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMyIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjUiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNiIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjgiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMiIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIzIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjQiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNSIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI5IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEwIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEyIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjMiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIxNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjYiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNyIgeT0iMTYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI4IiB5PSIxNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjkiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMTAiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMTEiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PC9zdmc+)
+    0 0 / 100% 100%;
+  image-rendering: pixelated;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(1px 3px 2px rgba(0, 0, 0, 0.35));
+  transition: opacity 0.4s;
+}
+.pwin > .hand {
+  left: 50%;
+  top: 64px;
+  margin-left: -10px;
+  z-index: 3;
+}
+.pwin > .hand {
+  animation: hand 1.6s ease-in-out infinite;
+}
+.pwin > .hand.show {
+  opacity: 1;
+  transition-delay: 0.6s;
+}
+@keyframes hand {
+  0%,
+  100% {
+    transform: translateX(-26px) rotate(-16deg);
+  }
+  50% {
+    transform: translateX(26px) rotate(-16deg);
+  }
+}
+.flashbox {
+  position: absolute;
+  background: rgba(40, 33, 26, 0.16);
+  pointer-events: none;
+}
+.fall {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+.fall .sheet {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+}

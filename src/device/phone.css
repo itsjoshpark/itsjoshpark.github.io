@@ -1,0 +1,440 @@
+/* Layout: on a phone the whole screen is the device face, edge to edge. On a wide screen it sits centered at phone size. Single theme on purpose.
+   The bezel, printer slot, section keys, speaker grooves, power lamp and rocker are Blender (Cycles) renders; the plate color below matches their plastic.
+   Palette: near-black plastic, like a 1980s studio monitor, with graphite keys. Orange appears only as light (screen, lamps).
+   Pages print on off-white tractor-feed paper in near-black ink. */
+:root {
+  --plate: #302f2f;
+  --ink: #241707;
+  --lit: #ff9d2e;
+  --screen-bg: #130902;
+  --ground: #2c2925;
+  --font-legend: "Antonio", "Arial Narrow", "Helvetica Neue Condensed", sans-serif;
+  color-scheme: light;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--ground);
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%;
+}
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+:focus-visible {
+  outline: 2px solid #fff3dc;
+  outline-offset: 2px;
+}
+
+.device {
+  position: fixed;
+  inset: 0;
+  background: var(--plate);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto; /* the paper rises from the slot above the keys, so it never hides them */
+  padding: calc(env(safe-area-inset-top, 0px) + 4px) max(4px, env(safe-area-inset-right, 0px))
+    env(safe-area-inset-bottom, 0px) max(4px, env(safe-area-inset-left, 0px));
+}
+/* soft light falloff and a very fine plastic texture (one device pixel) over the face, under the screen */
+.device::before,
+.device::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.device::before {
+  background:
+    radial-gradient(140% 70% at 30% 0%, rgba(255, 236, 200, 0.22), transparent 60%),
+    linear-gradient(180deg, transparent 55%, rgba(60, 30, 0, 0.14));
+  mix-blend-mode: soft-light;
+}
+.device::after {
+  background-image: var(--grain);
+  background-size: var(--grain-size, 128px);
+  opacity: 0.07;
+  mix-blend-mode: soft-light;
+}
+@media (min-width: 560px) {
+  body {
+    display: grid;
+    place-items: center;
+    background: radial-gradient(100% 70% at 50% 0%, #4a453f, var(--ground) 70%);
+  }
+  .device {
+    position: relative;
+    inset: auto;
+    width: 410px;
+    height: min(880px, calc(100dvh - 48px));
+    border-radius: 44px;
+    padding: 6px;
+    box-shadow:
+      inset 0 2px 1px rgba(255, 240, 210, 0.5),
+      inset 0 -3px 6px rgba(0, 0, 0, 0.25),
+      0 30px 60px -20px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* a tablet held upright: main.ts lays the page out 640 px wide and the browser scales it up; the device fills it */
+:root[data-zoom] .device {
+  width: calc(100vw - 64px);
+  height: calc(100dvh - 64px);
+}
+
+.bezel {
+  position: relative;
+  min-height: 0;
+  margin: 0 0 2px;
+}
+.frame,
+.dome {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.dome {
+  z-index: 1;
+}
+/* glass position inside the bezel render, in CSS px from each edge */
+.screen {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  bottom: 12px;
+  overflow: hidden;
+  background: var(--screen-bg);
+  touch-action: none;
+  z-index: 2;
+  cursor: grab;
+}
+.screen canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+}
+.screen canvas.glow {
+  filter: blur(3px) brightness(1.4);
+  opacity: 0.32;
+}
+.keys {
+  position: relative;
+  aspect-ratio: 380 / 74.34;
+  z-index: 2;
+}
+.col {
+  --t: 0;
+  --l: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-repeat: no-repeat;
+  background-image: var(--keys);
+  background-position: var(--x) calc((var(--t) + var(--l) * 5) * 100% / 9);
+}
+.col[data-st="down"] {
+  --t: 4;
+}
+.col[data-on] {
+  --l: 1;
+} /* the lamp of the section on the screen */
+.device[data-power="off"] .col {
+  --l: 0;
+}
+.col button {
+  position: absolute;
+  inset: 6% 4% 8%;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  color: transparent;
+  font-size: 1px;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  height: 54px;
+  padding: 0 10px 2px 14px;
+  gap: 10px;
+  position: relative;
+} /* under the face's light and grain, so its sprites match the plate */
+.grille {
+  width: 70px;
+  height: 27.4px;
+  background: var(--grille) center / 100% 100%;
+  flex: none;
+}
+.snd {
+  display: block;
+  border: 0;
+  background: none;
+  padding: 6px;
+  margin-right: -6px;
+  cursor: pointer;
+  touch-action: none;
+}
+.pwr {
+  flex: none;
+  width: 84px;
+  height: 27.4px;
+  margin-left: auto;
+  margin-right: -6px;
+  background: var(--pw-on) center / 100% 100%;
+}
+.foot[data-power="off"] .pwr {
+  background-image: var(--pw-off);
+}
+.rocker {
+  display: block;
+  width: 76px;
+  height: 42px;
+  background: var(--rk-on) center / 100% 100%;
+}
+.snd[aria-pressed="false"] .rocker {
+  background-image: var(--rk-off);
+}
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* screen power: the picture lives in .tube so it can collapse like a CRT; .spot is the dot that lingers after power-off */
+.tube {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+.scan {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.24) 0,
+    rgba(0, 0, 0, 0.06) 0.25px,
+    rgba(0, 0, 0, 0) 0.4px,
+    rgba(0, 0, 0, 0) 0.6px,
+    rgba(0, 0, 0, 0.06) 0.75px,
+    rgba(0, 0, 0, 0.24) 1px
+  );
+}
+.scan::before,
+.scan::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -20%;
+  height: 20%;
+  animation: roll 7.7s linear infinite;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 195, 130, 0),
+    rgba(255, 195, 130, 0.075) 9%,
+    rgba(255, 195, 130, 0.075) 91%,
+    rgba(255, 195, 130, 0)
+  );
+}
+.scan::before {
+  animation-delay: -3.85s;
+}
+@keyframes roll {
+  to {
+    transform: translateY(600%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scan::before,
+  .scan::after {
+    animation: none;
+    display: none;
+  }
+}
+.spot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  margin: -13px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, #fff7e6 0%, #ffc070 30%, rgba(255, 140, 40, 0.35) 55%, transparent 72%);
+}
+.screen.off {
+  cursor: default;
+}
+/* printer: a slot in the body under the screen. The paper rises in a window that runs from the slit up over the whole screen. */
+.upper {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.printer {
+  flex: none;
+  height: 29.2px;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 0 30px;
+  border-image: var(--slot) 0 120 fill / 0 30px stretch;
+  position: relative;
+  z-index: 2;
+}
+.upper > .bezel {
+  flex: 1;
+}
+/* the paper window runs across the face, from the top edge down to the middle of the slit; the keys sit below it;
+   the script sets top and bottom, and --sl / --sw to the slit */
+.pwin {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 5;
+  pointer-events: none;
+  touch-action: none;
+}
+.pwin .sheet {
+  pointer-events: auto;
+  cursor: grab;
+}
+.pwin::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 6px;
+  left: var(--sl, 0);
+  width: var(--sw, 0);
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), transparent);
+} /* the paper goes into the dark slit */
+.sheet,
+.lead {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+.pwin .sheet,
+.lead {
+  box-shadow:
+    4px 0 6px -4px rgba(0, 0, 0, 0.5),
+    -4px 0 6px -4px rgba(0, 0, 0, 0.5);
+}
+.sheet > canvas {
+  display: block;
+}
+.ghost {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.6s;
+  pointer-events: none;
+  z-index: 3;
+  padding: 12px 34px;
+  box-sizing: content-box;
+  background: radial-gradient(farthest-side, #ece5d5 78%, rgba(236, 229, 213, 0));
+} /* on a soft patch of paper color, so it reads over print */
+.ghost.show {
+  opacity: 0.92;
+  transition-delay: 0.2s;
+}
+.sheet > canvas.hint {
+  position: absolute;
+  opacity: 0.62;
+}
+.sheet > canvas.hint.top {
+  top: 7px;
+}
+.sheet > canvas.hint.end {
+  bottom: 9px;
+}
+/* first visit only: a pointing hand shows that the paper can be swiped sideways */
+.hand {
+  position: absolute;
+  width: 35px;
+  height: 42.5px;
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNCAxNyIgd2lkdGg9IjE0IiBoZWlnaHQ9IjE3IiBzaGFwZS1yZW5kZXJpbmc9ImNyaXNwRWRnZXMiPjxyZWN0IHg9IjUiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI2IiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjUiIHk9IjEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSIxIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjQiIHk9IjIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNiIgeT0iMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI0IiB5PSIzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSIzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjUiIHk9IjQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSI0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjgiIHk9IjQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI5IiB5PSI0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjgiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI5IiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIxMSIgeT0iNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjEyIiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMSIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjIiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI0IiB5PSI2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSI2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iOCIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjExIiB5PSI2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTIiIHk9IjYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMyIgeT0iNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjAiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIxIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMiIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjMiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI0IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iOCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjExIiB5PSI3IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTIiIHk9IjciIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMyIgeT0iNyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjAiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIxIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMiIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjMiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI0IiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNSIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjExIiB5PSI4IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTIiIHk9IjgiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMyIgeT0iOCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIyIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMyIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjQiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI1IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNiIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOSIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEwIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjkiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMiIgeT0iOSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEzIiB5PSI5IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMiIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIzIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjQiIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNSIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjEwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOCIgeT0iMTAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI5IiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjExIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEyIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEzIiB5PSIxMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjIiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMyIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI0IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjUiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNiIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI3IiB5PSIxMSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjgiIHk9IjExIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMCIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMSIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSIxMiIgeT0iMTEiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSIzIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjQiIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNSIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI2IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjciIHk9IjEyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iOCIgeT0iMTIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI5IiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEwIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjExIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjEyIiB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjMiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMTMiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSIxMyIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjEzIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMTQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSIxNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjE0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjYiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iNyIgeT0iMTUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiNmYmY3ZWUiLz48cmVjdCB4PSI4IiB5PSIxNSIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI2ZiZjdlZSIvPjxyZWN0IHg9IjkiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTAiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjZmJmN2VlIi8+PHJlY3QgeD0iMTEiIHk9IjE1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNCIgeT0iMTYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI1IiB5PSIxNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjYiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iNyIgeT0iMTYiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMxZjFhMTUiLz48cmVjdCB4PSI4IiB5PSIxNiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzFmMWExNSIvPjxyZWN0IHg9IjkiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMTAiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PHJlY3QgeD0iMTEiIHk9IjE2IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMWYxYTE1Ii8+PC9zdmc+)
+    0 0 / 100% 100%;
+  image-rendering: pixelated;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(1px 3px 2px rgba(0, 0, 0, 0.35));
+  transition: opacity 0.4s;
+}
+.pwin > .hand {
+  left: 50%;
+  bottom: 64px;
+  margin-left: -10px;
+  z-index: 3;
+}
+.pwin > .hand {
+  animation: hand 1.6s ease-in-out infinite;
+}
+.pwin > .hand.show {
+  opacity: 1;
+  transition-delay: 0.6s;
+}
+@keyframes hand {
+  0%,
+  100% {
+    transform: translateX(-26px) rotate(-16deg);
+  }
+  50% {
+    transform: translateX(26px) rotate(-16deg);
+  }
+}
+.flashbox {
+  position: absolute;
+  background: rgba(40, 33, 26, 0.16);
+  pointer-events: none;
+}
+.fall {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+.fall .sheet {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* a phone held sideways: the tube asks to turn it upright, and the paper waits out of sight */
+.device[data-turn] .pwin {
+  visibility: hidden;
+}

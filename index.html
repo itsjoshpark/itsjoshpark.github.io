@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Joshua Park</title>
+    <!--head-->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Antonio:wght@600;700&display=swap" />
+    <script>
+      // With scripts on, the device shows the page. The plain text below stays for readers without scripts, screen
+      // readers and the keyboard.
+      if ("noModule" in HTMLScriptElement.prototype) document.documentElement.classList.add("js");
+    </script>
+    <style>
+      /* with scripts on, the text is hidden but still read by screen readers; when a link in it gets keyboard focus,
+         it shows as a panel over the device */
+      html.js .doc:not(:focus-within) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      html.js .doc:focus-within {
+        position: fixed;
+        z-index: 100;
+        inset: 16px;
+        overflow: auto;
+        border: 1px solid #ff9d2e;
+        border-radius: 8px;
+        background: #191817;
+        color: #e9e2d4;
+        font:
+          17px/1.55 system-ui,
+          sans-serif;
+        user-select: text;
+      }
+      html:not(.js) body {
+        margin: 0;
+        background: #191817;
+        color: #e9e2d4;
+        font:
+          17px/1.55 system-ui,
+          sans-serif;
+      }
+      .doc {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 2rem max(16px, env(safe-area-inset-right, 0px)) 4rem max(16px, env(safe-area-inset-left, 0px));
+      }
+      .doc a {
+        color: #ff9d2e;
+      }
+      .doc nav {
+        display: flex;
+        gap: 1.25rem;
+      }
+      .doc h1,
+      .doc h2,
+      .doc h3 {
+        line-height: 1.2;
+        text-wrap: balance;
+      }
+      .doc code {
+        overflow-wrap: anywhere;
+      }
+      .doc img {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <main class="doc"><!--doc--></main>
+  </body>
+</html>

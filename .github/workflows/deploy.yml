@@ -1,0 +1,57 @@
+name: Deploy to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Vite+ and install dependencies
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          node-version-file: .node-version
+          cache: true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      # Type check, build, a page per address, and the URL check (package.json "build")
+      - name: Build
+        run: vp run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+          # keep dist/.well-known/assetlinks.json (dotfiles are left out by default since v4)
+          include-hidden-files: true
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

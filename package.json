@@ -1,0 +1,22 @@
+{
+  "name": "joshuapark.dev",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vp dev",
+    "build": "vp check --no-fmt --no-lint && vp build && node scripts/prerender.ts && node scripts/check-urls.ts",
+    "preview": "vp preview",
+    "check": "vp lint",
+    "check:fix": "vp lint --fix",
+    "format": "vp fmt",
+    "format:check": "vp fmt --check",
+    "check:urls": "node scripts/check-urls.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2",
+    "vite-plus": "catalog:"
+  },
+  "packageManager": "pnpm@12.15.0"
+}

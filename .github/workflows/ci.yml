@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Superseded pushes to the same branch are cancelled; the deploy workflow
+# deliberately does the opposite.
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Vite+ and install dependencies
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          node-version-file: .node-version
+          cache: true
+
+      # The checks below run even when an earlier one fails, so a single run
+      # reports every problem instead of stopping at the first.
+      - name: Lint
+        run: vp lint
+
+      - name: Check formatting
+        if: ${{ !cancelled() }}
+        run: vp fmt --check
+
+      - name: Type check and build
+        if: ${{ !cancelled() }}
+        run: vp run build
